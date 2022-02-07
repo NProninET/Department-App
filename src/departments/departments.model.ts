@@ -1,5 +1,5 @@
 import { HasMany, Column, DataType, Model, Table } from 'sequelize-typescript';
-import { Employee } from 'src/employees/employees.model';
+import { Position } from 'src/positions/positions.model';
 
 interface DepartmentCreationAttrs {
   title: string;
@@ -22,6 +22,6 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
   @Column({ type: DataType.STRING })
   description: string;
 
-  @HasMany(() => Employee)
-  employees: Employee[]
+  @HasMany(() => Position)
+  positions: Position[]
 }

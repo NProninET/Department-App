@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { PositionsService } from './positions.service';
 import { CreatePositionDto } from './dto/create-position.dto';
 
-@Controller('Positions')
+@Controller('positions')
 export class PositionsController {
   constructor(private positionService: PositionsService) {}
 

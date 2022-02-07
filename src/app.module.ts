@@ -15,14 +15,14 @@ import { Employee } from './employees/employees.model';
     ConfigModule.forRoot({
       envFilePath: '.env'
     }),
-    GraphQLModule.forRoot({
+    /*GraphQLModule.forRoot({
       include: [
         EmployeesModule,
         DepartmentsModule,
         PositionsModule
       ],
       autoSchemaFile: true
-    }),
+    }),*/
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,

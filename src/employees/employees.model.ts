@@ -1,5 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Department } from 'src/departments/departments.model';
+import { Position } from 'src/positions/positions.model';
 
 interface EmployeeCreationAttrs {
   name: string;
@@ -30,10 +31,10 @@ export class Employee extends Model<Employee, EmployeeCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   age: number;
 
-  @ForeignKey(() => Department)
+  @ForeignKey(() => Position)
   @Column
-  departmentId: number
+  positionId: number
 
-  @BelongsTo(() => Department)
-  department: Department
+  @BelongsTo(() => Position)
+  position: Position
 }
