@@ -19,4 +19,8 @@ export class EmployeesService {
 
     return employees;
   }
+
+  async getAllEmployeesTwo(department) {
+    return this.employeeRepository.findAll({ where: {departmentId: department} });
+  }
 }

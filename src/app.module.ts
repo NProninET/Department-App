@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { Department } from './departments/departments.model';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
+import { Employee } from './employees/employees.model';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { EmployeesModule } from './employees/employees.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [Department],
+      models: [Department, Employee],
+      synchronize: true,
       autoLoadModels: true
     }),
     DepartmentsModule,
