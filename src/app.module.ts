@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Department } from './departments/departments.model';
+import { PositionsModule } from './positions/positions.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 
@@ -11,6 +13,14 @@ import { EmployeesModule } from './employees/employees.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env'
+    }),
+    GraphQLModule.forRoot({
+      include: [
+        EmployeesModule,
+        DepartmentsModule,
+        PositionsModule
+      ],
+      autoSchemaFile: true
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
