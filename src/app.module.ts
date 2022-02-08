@@ -5,9 +5,11 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Department } from './departments/departments.model';
-import { PositionsModule } from './positions/positions.module';
+import { Employee } from './employees/employees.model';
+import { Position } from './positions/positions.model';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
+import { PositionsModule } from './positions/positions.module';
 
 @Module({
   imports: [
@@ -29,11 +31,16 @@ import { EmployeesModule } from './employees/employees.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [Department],
+      models: [
+        Department, 
+        Employee, 
+        Position
+      ],
       autoLoadModels: true
     }),
     DepartmentsModule,
-    EmployeesModule
+    EmployeesModule,
+    PositionsModule
   ],
   controllers: [AppController],
   providers: [AppService],
