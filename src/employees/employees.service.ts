@@ -9,6 +9,7 @@ export class EmployeesService {
   constructor(
     @InjectModel(Employee) private employeeRepository: typeof Employee,
   ) {}
+  
   async createEmployee(dto: CreateEmployeeDto) {
     const employee = await this.employeeRepository.create(dto);
 
@@ -21,7 +22,7 @@ export class EmployeesService {
     return employees;
   }
 
-  async getAllEmployeesInDepartment(position) {
+  async getAllEmployeesInDepartment(position: number) {
     return this.employeeRepository.findAll({ where: {positionId: position} });
   }
 

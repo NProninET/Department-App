@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Delete, Patch, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Delete, Patch, Param, Res, HttpStatus } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -8,28 +8,62 @@ export class EmployeesController {
   constructor(private employeeService: EmployeesService) {}
 
   @Post()
-  create(@Body() employeeDto: CreateEmployeeDto) {
-    return this.employeeService.createEmployee(employeeDto);
+  create(
+    @Res() res, 
+    @Body() employeeDto: CreateEmployeeDto
+  ) {
+    const newEmployee = this.employeeService.createEmployee(employeeDto);
+    return res.status(HttpStatus.OK).json({
+      message: 'Employee created',
+      payload: newEmployee
+    });
   }
 
   @Get()
-  getAll() {
-    return this.employeeService.getAllEmployees();
+  getAll(
+    @Res() res
+  ) {
+    const employees = this.employeeService.getAllEmployees();
+    return res.status(HttpStatus.OK).json({
+      message: 'Employees fetched',
+      payload: employees
+    });
   }
 
   @Get('/:id')
-  getEmployeeById(@Param('id') id: number) {
-    return this.employeeService.getEmployeeById(id);
+  getEmployeeById(
+    @Res() res, 
+    @Param('id') id: number
+  ) {
+    const employee = this.employeeService.getEmployeeById(id);
+    return res.status(HttpStatus.OK).json({
+      message: `Employee #${id} fetched`,
+      payload: employee
+    });
   }
 
   @Delete('/:id')
-  deleteDepartment(@Param('id') id: number) {
-    this.employeeService.removeEmployee(id);
+  deleteEmployee(
+    @Res() res, 
+    @Param('id') id: number
+  ) {
+    const employee = this.employeeService.removeEmployee(id);
+    return res.status(HttpStatus.OK).json({
+      message: `Employee #${id} deleted`,
+      payload: employee
+    });
   }
 
   @Patch(':id')
-  updateEmployee(@Param('id') id: number, @Body() updateEmployeeDto: UpdateEmployeeDto) {
+  updateEmployee(
+    @Res() res, 
+    @Param('id') id: number, 
+    @Body() updateEmployeeDto: UpdateEmployeeDto
+  ) {
     const employee = this.employeeService.updateEmployee(id, updateEmployeeDto)
-    return employee
+    return res.status(HttpStatus.OK).json({
+      message: `Employee #${id} updated`,
+      payload: employee
+    });
   }
 }
