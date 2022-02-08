@@ -9,27 +9,27 @@ export class DepartmentsResolver {
     constructor(private readonly departmentsService: DepartmentsService) {}
 
     @Mutation(() => Department)
-    createDepartment(@Args('createDepartmentInput') createDepartmentInput: CreateDepartmentInput) {
-        return this.departmentsService.createDepartment(createDepartmentInput);
+    async createDepartment(@Args('createDepartmentInput') createDepartmentInput: CreateDepartmentInput): Promise<Department> {
+        return await this.departmentsService.createDepartment(createDepartmentInput);
     }
 
     @Query(() => [Department], {name: 'departments'})
-    findAll() {
-        return this.departmentsService.getAllDepartments();
+    async findAll(): Promise<Department[]> {
+        return await this.departmentsService.getAllDepartments();
     }
 
     @Query(() => Department, {name: 'department'})
-    findOne(@Args('id') id: number) {
-        return this.departmentsService.getDepartmentById(id);
+    async findOne(@Args('id') id: number): Promise<Department> {
+        return await this.departmentsService.getDepartmentById(id);
     }
 
     @Mutation(() => Department)
-    updateDepartment(@Args('updateDepartmentInput') updateDepartmentInput: UpdateDepartmentInput) {
-        return this.departmentsService.updateDepartmentWithInput(updateDepartmentInput.id, updateDepartmentInput)
+    async updateDepartment(@Args('updateDepartmentInput') updateDepartmentInput: UpdateDepartmentInput): Promise<Department> {
+        return await this.departmentsService.updateDepartmentWithInput(updateDepartmentInput.id, updateDepartmentInput)
     }
 
-    @Mutation(() => Department)
-    removeDepartment(@Args('id') id: number) {
-        return this.departmentsService.removeDepartment(id);
+    @Mutation(() => Int)
+    async removeDepartment(@Args('id') id: number): Promise<number> {
+        return await this.departmentsService.removeDepartment(id);
     }
 }

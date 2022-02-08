@@ -5,31 +5,31 @@ import { CreatePositionInput } from "./inputs/create-position.input";
 import { UpdatePositionInput } from "./inputs/update-position.input";
 
 @Resolver(() => Position)
-export class DepartmentsResolver {
+export class PositionsResolver {
     constructor(private readonly positionsService: PositionsService) {}
 
     @Mutation(() => Position)
-    createDepartment(@Args('createPositionInput') createPositionInput: CreatePositionInput) {
+    createPosition(@Args('createPositionInput') createPositionInput: CreatePositionInput): Promise<Position> {
         return this.positionsService.createPosition(createPositionInput);
     }
 
     @Query(() => [Position], {name: 'positions'})
-    findAll() {
+    findAll(): Promise<Position[]> {
         return this.positionsService.getAllPositions();
     }
 
     @Query(() => Position, {name: 'position'})
-    findOne(@Args('id') id: number) {
+    findOne(@Args('id') id: number): Promise<Position> {
         return this.positionsService.getPositionById(id);
     }
 
     @Mutation(() => Position)
-    updateDepartment(@Args('updatePositionInput') updatePositionInput: UpdatePositionInput) {
+    updatePosition(@Args('updatePositionInput') updatePositionInput: UpdatePositionInput): Promise<Position> {
         return this.positionsService.updatePositionWithInput(updatePositionInput.id, updatePositionInput)
     }
 
-    @Mutation(() => Position)
-    removeDepartment(@Args('id') id: number) {
+    @Mutation(() => Int)
+    removePosition(@Args('id') id: number):  Promise<number> {
         return this.positionsService.removePosition(id);
     }
 }

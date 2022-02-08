@@ -9,27 +9,27 @@ export class EmployeesResolver {
     constructor(private readonly employeesService: EmployeesService) {}
 
     @Mutation(() => Employee, {name: 'createEmployee'})
-    createEmployee(@Args('createEmployeeInput') createEmployeeInput: CreateEmployeeInput) {
+    createEmployee(@Args('createEmployeeInput') createEmployeeInput: CreateEmployeeInput): Promise<Employee> {
         return this.employeesService.createEmployee(createEmployeeInput);
     }
 
     @Query(() => [Employee], {name: 'employees'})
-    findAll() {
+    findAll(): Promise<Employee[]> {
         return this.employeesService.getAllEmployees();
     }
 
     @Query(() => Employee, {name: 'employee'})
-    findOne(@Args('id') id: number) {
+    findOne(@Args('id') id: number): Promise<Employee> {
         return this.employeesService.getEmployeeById(id);
     }
 
     @Mutation(() => Employee, {name: 'updateEmployee'})
-    updateEmployeet(@Args('updateEmployeeInput') updateEmployeeInput: UpdateEmployeeInput) {
+    updateEmployee(@Args('updateEmployeeInput') updateEmployeeInput: UpdateEmployeeInput): Promise<Employee> {
         return this.employeesService.updateEmployeeWithInput(updateEmployeeInput.id, updateEmployeeInput)
     }
 
     @Mutation(() => Employee, {name: 'removeEmployee'})
-    removeEmployee(@Args('id') id: number) {
+    removeEmployee(@Args('id') id: number): Promise<number> {
         return this.employeesService.removeEmployee(id);
     }
 }

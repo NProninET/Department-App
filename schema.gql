@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Employee {
+  id: Int!
+  name: String
+  surname: String
+  email: String
+  age: Float
+  position: Position!
+}
+
 type Position {
   id: Int!
   title: String
@@ -18,12 +27,22 @@ type Department {
 type Query {
   departments: [Department!]!
   department(id: Float!): Department!
+  employees: [Employee!]!
+  employee(id: Float!): Employee!
+  positions: [Position!]!
+  position(id: Float!): Position!
 }
 
 type Mutation {
   createDepartment(createDepartmentInput: CreateDepartmentInput!): Department!
   updateDepartment(updateDepartmentInput: UpdateDepartmentInput!): Department!
-  removeDepartment(id: Float!): Department!
+  removeDepartment(id: Float!): Int!
+  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: Float!): Employee!
+  createPosition(createPositionInput: CreatePositionInput!): Position!
+  updatePosition(updatePositionInput: UpdatePositionInput!): Position!
+  removePosition(id: Float!): Int!
 }
 
 input CreateDepartmentInput {
@@ -39,6 +58,52 @@ input UpdateDepartmentInput {
   title: String
 
   """Short description of department"""
+  description: String
+  id: Int!
+}
+
+input CreateEmployeeInput {
+  """Employee's first name"""
+  name: String
+
+  """Employee's last name"""
+  surname: String
+
+  """Employee's email"""
+  email: String!
+
+  """Employee's age"""
+  age: Int
+}
+
+input UpdateEmployeeInput {
+  """Employee's first name"""
+  name: String
+
+  """Employee's last name"""
+  surname: String
+
+  """Employee's email"""
+  email: String
+
+  """Employee's age"""
+  age: Int
+  id: Int!
+}
+
+input CreatePositionInput {
+  """Position title"""
+  title: String!
+
+  """Position description"""
+  description: String!
+}
+
+input UpdatePositionInput {
+  """Position title"""
+  title: String
+
+  """Position description"""
   description: String
   id: Int!
 }
