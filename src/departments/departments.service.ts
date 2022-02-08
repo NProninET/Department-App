@@ -5,6 +5,7 @@ import { Department } from './departments.model';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { EmployeesService } from 'src/employees/employees.service';
+import { UpdateDepartmentInput } from './inputs/update-department.input';
 
 @Injectable()
 export class DepartmentsService {
@@ -35,6 +36,15 @@ export class DepartmentsService {
   async updateDepartment(id: number, dto: UpdateDepartmentDto) {
     const department = await this.departmentRepository.findByPk(id)
     await department.update(dto)
+
+    await department.save()
+
+    return department
+  }
+
+  async updateDepartmentWithInput(id: number, input: UpdateDepartmentInput) {
+    const department = await this.departmentRepository.findByPk(id)
+    await department.update(input)
 
     await department.save()
 

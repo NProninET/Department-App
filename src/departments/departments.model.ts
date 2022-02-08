@@ -1,4 +1,5 @@
 import { HasMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Position } from 'src/positions/positions.model';
 
 interface DepartmentCreationAttrs {
@@ -6,8 +7,11 @@ interface DepartmentCreationAttrs {
   description: string;
 }
 
+@ObjectType()
 @Table({ tableName: 'departments' })
 export class Department extends Model<Department, DepartmentCreationAttrs> {
+  
+  @Field(type => Int)
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -16,9 +20,11 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
   })
   id: number;
 
+  @Field({nullable: true})
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   title: string;
 
+  @Field({nullable: true})
   @Column({ type: DataType.STRING })
   description: string;
 
