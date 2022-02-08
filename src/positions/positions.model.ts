@@ -29,11 +29,11 @@ export class Position extends Model<Position, PositionCreationAttrs> {
   @Column({ type: DataType.STRING })
   description: string;
 
-  @Field({nullable: true})
   @ForeignKey(() => Department)
   @Column
   departmentId: number
 
+  @Field(() => Department)
   @BelongsTo(() => Department)
   department: Department
 
