@@ -22,7 +22,8 @@ import { PositionsModule } from './positions/positions.module';
         DepartmentsModule,
         PositionsModule
       ],
-      autoSchemaFile: true
+      autoSchemaFile: 'schema.gql',
+      playground: true
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',

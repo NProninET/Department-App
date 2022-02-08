@@ -42,6 +42,7 @@ export class Employee extends Model<Employee, EmployeeCreationAttrs> {
   @Column
   positionId: number
 
+  @Field(() => Position)
   @BelongsTo(() => Position)
   position: Position
 }

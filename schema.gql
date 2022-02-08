@@ -1,0 +1,44 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Position {
+  id: Int!
+  title: String
+  description: String
+  department: Department!
+}
+
+type Department {
+  id: Int!
+  title: String
+  description: String
+}
+
+type Query {
+  departments: [Department!]!
+  department(id: Float!): Department!
+}
+
+type Mutation {
+  createDepartment(createDepartmentInput: CreateDepartmentInput!): Department!
+  updateDepartment(updateDepartmentInput: UpdateDepartmentInput!): Department!
+  removeDepartment(id: Float!): Department!
+}
+
+input CreateDepartmentInput {
+  """Department title"""
+  title: String!
+
+  """Short description of department"""
+  description: String
+}
+
+input UpdateDepartmentInput {
+  """Department title"""
+  title: String
+
+  """Short description of department"""
+  description: String
+  id: Int!
+}
