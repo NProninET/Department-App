@@ -6,4 +6,6 @@ export class CreatePositionInput {
   @Field(() => String, {description: 'Position title'})
   title: string;
   
+  @Field(() => String, {description: 'Position description'})
+  description: string;
 }
