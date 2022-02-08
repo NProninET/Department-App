@@ -4,6 +4,7 @@ import { Position } from './positions.model';
 import { Employee } from 'src/employees/employees.model';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
+import { UpdatePositionInput } from './inputs/update-position.input';
 
 @Injectable()
 export class PositionsService {
@@ -37,6 +38,15 @@ export class PositionsService {
   }
 
   async updatePosition(id: number, dto: UpdatePositionDto) {
+    const department = await this.positionRepository.findByPk(id)
+    await department.update(dto)
+
+    await department.save()
+
+    return department
+  }
+
+  async updatePositionWithInput(id: number, dto: UpdatePositionInput) {
     const department = await this.positionRepository.findByPk(id)
     await department.update(dto)
 
