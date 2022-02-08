@@ -6,22 +6,22 @@ import { CreatePositionDto } from './dto/create-position.dto';
 @Injectable()
 export class PositionsService {
   constructor(
-    @InjectModel(Position) private PositionRepository: typeof Position,
+    @InjectModel(Position) private positionRepository: typeof Position,
   ) {}
   async createPosition(dto: CreatePositionDto) {
-    const Position = await this.PositionRepository.create(dto);
+    const position = await this.positionRepository.create(dto);
 
-    return Position;
+    return position;
   }
 
   async getAllPositions() {
-    const Positions = await this.PositionRepository.findAll();
+    const positions = await this.positionRepository.findAll();
 
-    return Positions;
+    return positions;
   }
 
   async getByTitle(title: string) {
-    const user = await this.PositionRepository.findOne({ where: { title } });
-    return user;
+    const position = await this.positionRepository.findOne({ where: { title } });
+    return position;
   }
 }

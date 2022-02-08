@@ -1,4 +1,6 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { Department } from 'src/departments/departments.model';
+import { Position } from 'src/positions/positions.model';
 
 interface EmployeeCreationAttrs {
   name: string;
@@ -29,9 +31,10 @@ export class Employee extends Model<Employee, EmployeeCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   age: number;
 
-  @Column({ type: DataType.STRING })
-  position: string;
+  @ForeignKey(() => Position)
+  @Column
+  positionId: number
 
-  @Column({ type: DataType.STRING })
-  department: string;
+  @BelongsTo(() => Position)
+  position: Position
 }
