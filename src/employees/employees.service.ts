@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Employee } from './employees.model';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeInput } from './inputs/update-employee.input';
 
 @Injectable()
 export class EmployeesService {
@@ -36,11 +37,16 @@ export class EmployeesService {
   }
 
   async updateEmployee(id: number, dto: UpdateEmployeeDto) {
-    const department = await this.employeeRepository.findByPk(id)
-    await department.update(dto)
+    const employee = await this.employeeRepository.findByPk(id)
+    await employee.update(dto);
+    await employee.save();
+    return employee;
+  }
 
-    await department.save()
-
-    return department
+  async updateEmployeeWithInput(id: number, dto: UpdateEmployeeInput) {
+    const employee = await this.employeeRepository.findByPk(id);
+    await employee.update(dto);
+    await employee.save();
+    return employee;
   }
 }
