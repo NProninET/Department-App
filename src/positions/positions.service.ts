@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Position } from './positions.model';
+import { Employee } from 'src/employees/employees.model';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
 
@@ -23,7 +24,7 @@ export class PositionsService {
   }
 
   async getAllPositionsInDepartment(department: number) {
-    return this.positionRepository.findAll({ where: {departmentId: department} });
+    return this.positionRepository.findAll({ where: {departmentId: department}, include: [Employee] });
   }
 
   async removePosition(id: number) {
