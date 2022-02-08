@@ -22,7 +22,7 @@ export class EmployeesService {
     return employees;
   }
 
-  async getAllEmployeesInDepartment(position: number) {
+  async getAllEmployeesByPosition(position: number) {
     return this.employeeRepository.findAll({ where: {positionId: position} });
   }
 

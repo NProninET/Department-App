@@ -6,10 +6,12 @@ import { DepartmentsController } from './departments.controller';
 import { Department } from './departments.model';
 import { DepartmentsResolver } from './departments.resolver';
 import { DepartmentsService } from './departments.service';
+import { Position } from 'src/positions/positions.model';
+import { PositionsService } from 'src/positions/positions.service';
 
 @Module({
   controllers: [DepartmentsController],
-  providers: [DepartmentsService, EmployeesService, DepartmentsResolver],
-  imports: [SequelizeModule.forFeature([Department, Employee])],
+  providers: [DepartmentsService, EmployeesService, PositionsService, DepartmentsResolver],
+  imports: [SequelizeModule.forFeature([Department, Employee, Position])],
 })
 export class DepartmentsModule {}

@@ -8,62 +8,51 @@ export class EmployeesController {
   constructor(private employeeService: EmployeesService) {}
 
   @Post()
-  create(
-    @Res() res, 
-    @Body() employeeDto: CreateEmployeeDto
-  ) {
+  create(@Res() res, @Body() employeeDto: CreateEmployeeDto) {
     const newEmployee = this.employeeService.createEmployee(employeeDto);
     return res.status(HttpStatus.OK).json({
       message: 'Employee created',
-      payload: newEmployee
-    });
-  }
-
-  @Get()
-  getAll(
-    @Res() res
-  ) {
-    const employees = this.employeeService.getAllEmployees();
-    return res.status(HttpStatus.OK).json({
-      message: 'Employees fetched',
-      payload: employees
+      payload: newEmployee,
     });
   }
 
   @Get('/:id')
-  getEmployeeById(
-    @Res() res, 
-    @Param('id') id: number
-  ) {
-    const employee = this.employeeService.getEmployeeById(id);
+  async getEmployeeById(@Res() res, @Param('id') id: number) {
+    const employee = await this.employeeService.getEmployeeById(id);
     return res.status(HttpStatus.OK).json({
       message: `Employee #${id} fetched`,
-      payload: employee
+      payload: employee,
+    });
+  }
+
+  @Get()
+  getAll(@Res() res) {
+    const employees = this.employeeService.getAllEmployees();
+    return res.status(HttpStatus.OK).json({
+      message: 'Employees fetched',
+      payload: employees,
     });
   }
 
   @Delete('/:id')
-  deleteEmployee(
-    @Res() res, 
-    @Param('id') id: number
-  ) {
+  deleteEmployee(@Res() res, @Param('id') id: number) {
     const employee = this.employeeService.removeEmployee(id);
     return res.status(HttpStatus.OK).json({
       message: `Employee #${id} deleted`,
-      payload: employee
+      payload: employee,
     });
   }
 
   @Patch(':id')
   updateEmployee(
-    @Res() res, 
-    @Param('id') id: number, 
-    @Body() updateEmployeeDto: UpdateEmployeeDto
+    @Res() res,
+    @Param('id') id: number,
+    @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    const employee = this.employeeService.updateEmployee(id, updateEmployeeDto)
+    const employee = this.employeeService.updateEmployee(id, updateEmployeeDto);
     return res.status(HttpStatus.OK).json({
       message: `Employee #${id} updated`,
-      payload: employee
+      payload: employee,
     });
   }
 }

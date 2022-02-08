@@ -38,7 +38,8 @@ export class PositionsController {
     const position = this.positionService.getPositionById(id);
     return res.status(HttpStatus.OK).json({
       message: `Position #${id} fetched`,
-      payload: position
+      payload: 
+      position
     });
   }
 
