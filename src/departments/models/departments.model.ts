@@ -10,7 +10,7 @@ interface DepartmentCreationAttrs {
 @ObjectType()
 @Table({ tableName: 'departments' })
 export class Department extends Model<Department, DepartmentCreationAttrs> {
-  
+
   @Field(type => Int)
   @Column({
     type: DataType.INTEGER,
@@ -20,15 +20,23 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
   })
   id: number;
 
-  @Field({nullable: false})
+  @Field({ nullable: false })
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   title: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING })
   description: string;
 
   @Field(() => [Position])
   @HasMany(() => Position)
   positions: Position[]
+
+  @Field(
+    type => Int, {
+    description: 'Quantity of employees in department',
+    defaultValue: 0
+  })
+  @Column({type: DataType.VIRTUAL(DataType.INTEGER)})
+  employeesQuantity: number;
 }

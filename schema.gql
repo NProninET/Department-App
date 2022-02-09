@@ -24,6 +24,9 @@ type Department {
   title: String!
   description: String
   positions: [Position!]!
+
+  """Quantity of employees in department"""
+  employeesQuantity: Int!
 }
 
 type DepartmentBase {

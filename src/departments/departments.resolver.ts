@@ -3,7 +3,6 @@ import { DepartmentsService } from "./departments.service";
 import { Department } from "./models/departments.model";
 import { CreateDepartmentInput } from "./inputs/create-department.input";
 import { UpdateDepartmentInput } from "./inputs/update-department.input";
-import { DepartmentExtended } from "./models/departments-extended.model";
 import { DepartmentBase } from "./models/departments-base.model";
 
 @Resolver(() => Department)

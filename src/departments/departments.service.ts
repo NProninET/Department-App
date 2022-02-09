@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Employee } from 'src/employees/models/employees.model';
 import { Department } from './models/departments.model';
 import { DepartmentBase } from './models/departments-base.model';
-import { DepartmentExtended } from './models/departments-extended.model';
 import { UpdateDepartmentInput } from './inputs/update-department.input';
 import { ApolloError } from 'apollo-server-express';
 import { Position } from 'src/positions/models/positions.model';
@@ -11,15 +10,6 @@ import { CreateDepartmentInput } from './inputs/create-department.input';
 
 @Injectable()
 export class DepartmentsService {
-
-    includes = {
-        include: [{
-            model: Position,
-            include: [{
-                model: Employee,
-            }]
-        }]
-    }
 
     constructor(
         @InjectModel(Department) private departmentRepository: typeof Department
@@ -36,12 +26,33 @@ export class DepartmentsService {
     }
 
     async getAllDepartments(): Promise<Department[]> {
-        const departments = await this.departmentRepository.findAll(this.includes);
+        const departments = await this.departmentRepository.findAll({
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee
+                }]
+            }], 
+        });
+        
+        departments.forEach((department) => {
+            let qty = 0;
+            department.positions.forEach((position) => { qty += position.employees.length; })
+            department.setDataValue('employeesQuantity', qty);
+        });
+
         return departments;
     }
 
     async getDepartmentById(id: number): Promise<Department> {
-        const department = await this.departmentRepository.findByPk(id, this.includes);
+        const department = await this.departmentRepository.findByPk(id, {
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee,
+                }]
+            }], 
+        });
         return department;
     }
 
