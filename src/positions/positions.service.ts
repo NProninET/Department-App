@@ -25,7 +25,7 @@ export class PositionsService {
   }
 
   async getAllPositionsInDepartment(department: number) {
-    return this.positionRepository.findAll({ where: {departmentId: department}, include: [Employee] });
+    return this.positionRepository.findAll({ where: {departmentId: department}, attributes: ['id', 'title', 'description']});
   }
 
   async removePosition(id: number) {

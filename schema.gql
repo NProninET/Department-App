@@ -18,27 +18,29 @@ type Department {
 type Query {
   departments: [Department!]!
   department(id: Float!): Department!
+  positions: [Position!]!
+  position(id: Float!): Position!
 }
 
 type Mutation {
-  createDepartment(createDepartmentInput: CreateDepartmentInput!): Department!
-  updateDepartment(updateDepartmentInput: UpdateDepartmentInput!): Department!
-  removeDepartment(id: Float!): Department!
+  createDepartment(createPositionInput: CreatePositionInput!): Position!
+  updateDepartment(updatePositionInput: UpdatePositionInput!): Position!
+  removeDepartment(id: Float!): Position!
 }
 
-input CreateDepartmentInput {
-  """Department title"""
+input CreatePositionInput {
+  """Position title"""
   title: String!
 
-  """Short description of department"""
-  description: String
+  """Position description"""
+  description: String!
 }
 
-input UpdateDepartmentInput {
-  """Department title"""
+input UpdatePositionInput {
+  """Position title"""
   title: String
 
-  """Short description of department"""
+  """Position description"""
   description: String
   id: Int!
 }

@@ -5,7 +5,7 @@ import { CreatePositionInput } from "./inputs/create-position.input";
 import { UpdatePositionInput } from "./inputs/update-position.input";
 
 @Resolver(() => Position)
-export class DepartmentsResolver {
+export class PositionsResolver {
     constructor(private readonly positionsService: PositionsService) {}
 
     @Mutation(() => Position)
