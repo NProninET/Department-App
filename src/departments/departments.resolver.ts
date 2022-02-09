@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { DepartmentsService } from "./departments.service";
-import { Department } from "./departments.model";
+import { Department } from "./models/departments.model";
 import { CreateDepartmentInput } from "./inputs/create-department.input";
 import { UpdateDepartmentInput } from "./inputs/update-department.input";
 
@@ -8,9 +8,9 @@ import { UpdateDepartmentInput } from "./inputs/update-department.input";
 export class DepartmentsResolver {
     constructor(private readonly departmentsService: DepartmentsService) {}
 
-    @Mutation(() => Department)
-    async createDepartment(@Args('createDepartmentInput') createDepartmentInput: CreateDepartmentInput): Promise<Department> {
-        return await this.departmentsService.createDepartment(createDepartmentInput);
+    @Mutation(() => Department, {name: 'createDepartment'})
+    async createDepartmentWithInput(@Args('input') cdi: CreateDepartmentInput): Promise<Department> {
+        return await this.departmentsService.createDepartmentWithInput(cdi);
     }
 
     @Query(() => [Department], {name: 'departments'})
@@ -23,8 +23,8 @@ export class DepartmentsResolver {
         return await this.departmentsService.getDepartmentById(id);
     }
 
-    @Mutation(() => Department)
-    async updateDepartment(@Args('updateDepartmentInput') updateDepartmentInput: UpdateDepartmentInput): Promise<Department> {
+    @Mutation(() => Department, {name: 'updateDepartment'})
+    async updateDepartment(@Args('input') updateDepartmentInput: UpdateDepartmentInput): Promise<Department> {
         return await this.departmentsService.updateDepartmentWithInput(updateDepartmentInput.id, updateDepartmentInput)
     }
 

@@ -69,7 +69,7 @@ export class DepartmentsController {
     });
   }
 
-  @Delete('/:id')
+/*   @Delete('/:id')
   async deleteDepartment(
     @Res() res, 
     @Param('id') id: number
@@ -87,7 +87,7 @@ export class DepartmentsController {
         payload: department,
       });
     }
-  }
+  } */
 
   @Patch(':id')
   async updateDepartment(

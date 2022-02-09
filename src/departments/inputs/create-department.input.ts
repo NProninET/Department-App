@@ -1,15 +1,12 @@
-import { InputType, Int, Field } from "@nestjs/graphql";
+import { InputType, Int, Field, PartialType } from "@nestjs/graphql";
+import { BaseDepartmentInput } from "./department.input";
 
 @InputType()
-export class CreateDepartmentInput {
-  
-  @Field(() => String, {description: 'Department title'})
-  title: string;
+export class CreateDepartmentInput extends PartialType(BaseDepartmentInput) {
 
-  @Field(
-    () => String, {
-      description: 'Short description of department', 
-      nullable: true
+    @Field(() => String, { 
+        description: 'Department title',
+        nullable: false
     })
-  description: string;
+    title: string;
 }

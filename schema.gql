@@ -6,8 +6,8 @@ type Employee {
   id: Int!
   name: String
   surname: String
-  email: String
-  age: Float
+  email: String!
+  age: Int
   position: Position!
 }
 
@@ -20,29 +20,30 @@ type Position {
 
 type Department {
   id: Int!
-  title: String
+  title: String!
   description: String
 }
 
 type Query {
   departments: [Department!]!
-  department(id: Float!): Department!
+  department(id: Int!): Department!
   employees: [Employee!]!
-  employee(id: Float!): Employee!
+  employeesFromDepartment(id: Int!): [Employee!]!
+  employee(id: Int!): Employee!
   positions: [Position!]!
-  position(id: Float!): Position!
+  position(id: Int!): Position!
 }
 
 type Mutation {
-  createDepartment(createDepartmentInput: CreateDepartmentInput!): Department!
-  updateDepartment(updateDepartmentInput: UpdateDepartmentInput!): Department!
-  removeDepartment(id: Float!): Int!
-  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
-  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
-  removeEmployee(id: Float!): Employee!
-  createPosition(createPositionInput: CreatePositionInput!): Position!
-  updatePosition(updatePositionInput: UpdatePositionInput!): Position!
-  removePosition(id: Float!): Int!
+  createDepartment(input: CreateDepartmentInput!): Department!
+  updateDepartment(input: UpdateDepartmentInput!): Department!
+  removeDepartment(id: Int!): Int!
+  createEmployee(input: CreateEmployeeInput!): Employee!
+  updateEmployee(input: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: Int!): Employee!
+  createPosition(input: CreatePositionInput!): Position!
+  updatePosition(input: UpdatePositionInput!): Position!
+  removePosition(id: Int!): Int!
 }
 
 input CreateDepartmentInput {
@@ -59,6 +60,8 @@ input UpdateDepartmentInput {
 
   """Short description of department"""
   description: String
+
+  """Department ID"""
   id: Int!
 }
 
@@ -74,6 +77,9 @@ input CreateEmployeeInput {
 
   """Employee's age"""
   age: Int
+
+  """Employee's position ID"""
+  positionId: Int!
 }
 
 input UpdateEmployeeInput {
@@ -88,15 +94,20 @@ input UpdateEmployeeInput {
 
   """Employee's age"""
   age: Int
+
+  """Employee's ID"""
   id: Int!
 }
 
 input CreatePositionInput {
   """Position title"""
-  title: String!
+  title: String
 
   """Position description"""
-  description: String!
+  description: String
+
+  """Department ID"""
+  departmentId: Int!
 }
 
 input UpdatePositionInput {
@@ -105,5 +116,7 @@ input UpdatePositionInput {
 
   """Position description"""
   description: String
+
+  """Position ID"""
   id: Int!
 }

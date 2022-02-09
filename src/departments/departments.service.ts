@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Employee } from 'src/employees/employees.model';
-import { Department } from './departments.model';
+import { Employee } from 'src/employees/models/employees.model';
+import { Department } from './models/departments.model';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { EmployeesService } from 'src/employees/employees.service';
 import { UpdateDepartmentInput } from './inputs/update-department.input';
 import { ApolloError } from 'apollo-server-express';
-import { Position } from 'src/positions/positions.model';
+import { Position } from 'src/positions/models/positions.model';
+import { CreateDepartmentInput } from './inputs/create-department.input';
 
 @Injectable()
 export class DepartmentsService {
     constructor(
         @InjectModel(Department) private departmentRepository: typeof Department
     ) { }
+
     async createDepartment(dto: CreateDepartmentDto): Promise<Department> {
         try {
             const department = await this.departmentRepository.create(dto);
@@ -21,6 +23,16 @@ export class DepartmentsService {
         } catch (e) {
             console.log(e);
             throw new ApolloError(`Department with title '${dto.title}' already exists!`, '');
+        }
+    }
+
+    async createDepartmentWithInput(input: CreateDepartmentInput): Promise<Department> {
+        try {
+            const department = await this.departmentRepository.create(input);
+            return department;
+        } catch (e) {
+            console.log(e);
+            throw new ApolloError(`Department with title '${input.title}' already exists!`, '');
         }
     }
 

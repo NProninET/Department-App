@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Position } from 'src/positions/positions.model';
+import { Position } from 'src/positions/models/positions.model';
 
 interface EmployeeCreationAttrs {
   name: string;
@@ -23,19 +23,32 @@ export class Employee extends Model<Employee, EmployeeCreationAttrs> {
   id: number;
 
   @Field({ nullable: true })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ 
+    type: DataType.STRING, 
+    allowNull: true 
+  })
   name: string;
 
   @Field({ nullable: true })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ 
+    type: DataType.STRING, 
+    allowNull: true 
+  })
   surname: string;
 
-  @Field({ nullable: true })
-  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  @Field({ nullable: false })
+  @Column({ 
+    type: DataType.STRING, 
+    unique: true, 
+    allowNull: false 
+  })
   email: string;
 
   @Field({ nullable: true })
-  @Column({ type: DataType.INTEGER, allowNull: false })
+  @Column({ 
+    type: DataType.INTEGER, 
+    allowNull: true 
+  })
   age: number;
 
   @ForeignKey(() => Position)

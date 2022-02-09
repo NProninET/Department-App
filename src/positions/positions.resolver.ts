@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { PositionsService } from "./positions.service";
-import { Position } from "./positions.model";
+import { Position } from "./models/positions.model";
 import { CreatePositionInput } from "./inputs/create-position.input";
 import { UpdatePositionInput } from "./inputs/update-position.input";
 
@@ -8,9 +8,9 @@ import { UpdatePositionInput } from "./inputs/update-position.input";
 export class PositionsResolver {
     constructor(private readonly positionsService: PositionsService) {}
 
-    @Mutation(() => Position)
-    createPosition(@Args('createPositionInput') createPositionInput: CreatePositionInput): Promise<Position> {
-        return this.positionsService.createPosition(createPositionInput);
+    @Mutation(() => Position, {name: 'createPosition'})
+    createPosition(@Args('input') createPositionInput: CreatePositionInput): Promise<Position> {
+        return this.positionsService.createPositionWithInput(createPositionInput);
     }
 
     @Query(() => [Position], {name: 'positions'})
@@ -23,12 +23,12 @@ export class PositionsResolver {
         return this.positionsService.getPositionById(id);
     }
 
-    @Mutation(() => Position)
-    updatePosition(@Args('updatePositionInput') updatePositionInput: UpdatePositionInput): Promise<Position> {
+    @Mutation(() => Position, {name: 'updatePosition'})
+    updatePosition(@Args('input') updatePositionInput: UpdatePositionInput): Promise<Position> {
         return this.positionsService.updatePositionWithInput(updatePositionInput.id, updatePositionInput)
     }
 
-    @Mutation(() => Int)
+    @Mutation(() => Int, {name: 'removePosition'})
     removePosition(@Args('id') id: number):  Promise<number> {
         return this.positionsService.removePosition(id);
     }

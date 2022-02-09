@@ -1,29 +1,19 @@
-import { InputType, Int, Field } from "@nestjs/graphql";
+import { InputType, Int, Field, PartialType } from "@nestjs/graphql";
+import { BaseEmployeeInput } from "./employee.input";
 
 @InputType()
-export class CreateEmployeeInput {
-  
-  @Field(
-    () => String, {
-      description: 'Employee\'s first name',
-      nullable: true
-    })
-  name: string;
+export class CreateEmployeeInput extends PartialType(BaseEmployeeInput) {
 
-  @Field(
-    () => String, {
-      description: 'Employee\'s last name',
-      nullable: true
+    @Field(() => String, { 
+        description: 'Employee\'s email',
+        nullable: false
     })
-  surname: string;
+    email: string;
 
-  @Field(() => String, {description: 'Employee\'s email'})
-  email: string;
-
-  @Field(
-    () => Int, {
-      description: 'Employee\'s age',
-      nullable: true
+    @Field(
+        () => Int, {
+        description: 'Employee\'s position ID',
+        nullable: false
     })
-  age: number;
+    positionId: number;
 }

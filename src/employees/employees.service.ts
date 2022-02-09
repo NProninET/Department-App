@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Employee } from './employees.model';
+import { Employee } from './models/employees.model';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeInput } from './inputs/update-employee.input';
+import { CreateEmployeeInput } from './inputs/create-employee.input';
+import { Position } from 'src/positions/models/positions.model';
+import { Department } from 'src/departments/models/departments.model';
 
 @Injectable()
 export class EmployeesService {
@@ -17,14 +20,35 @@ export class EmployeesService {
     return employee;
   }
 
-  async getAllEmployees() {
-    const employees = await this.employeeRepository.findAll();
+  async createEmployeeWithInput(input: CreateEmployeeInput) {
+    console.log(input);
+    const employee = await this.employeeRepository.create(input);
 
+    return employee;
+  }
+
+  async getAllEmployees() {
+    const employees = await this.employeeRepository.findAll({
+      include: {
+        model: Position,
+        include: [{
+          model: Department
+        }]
+      }
+    });
     return employees;
   }
 
-  async getAllEmployeesByPosition(position: number) {
-    return this.employeeRepository.findAll({ where: {positionId: position} });
+  async getAllEmployeesInDepartment(department: number) {
+    return this.employeeRepository.findAll({
+      include: [{
+        model: Position,
+        where: { departmentId: department },
+        include: [{
+          model: Department
+        }]
+      }]
+    });
   }
 
   async removeEmployee(id: number) {
@@ -43,9 +67,9 @@ export class EmployeesService {
     return employee;
   }
 
-  async updateEmployeeWithInput(id: number, dto: UpdateEmployeeInput) {
+  async updateEmployeeWithInput(id: number, input: UpdateEmployeeInput) {
     const employee = await this.employeeRepository.findByPk(id);
-    await employee.update(dto);
+    await employee.update(input);
     await employee.save();
     return employee;
   }

@@ -4,9 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Department } from './departments/departments.model';
-import { Employee } from './employees/employees.model';
-import { Position } from './positions/positions.model';
+import { Department } from './departments/models/departments.model';
+import { Employee } from './employees/models/employees.model';
+import { Position } from './positions/models/positions.model';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { PositionsModule } from './positions/positions.module';
@@ -23,6 +23,9 @@ import { PositionsModule } from './positions/positions.module';
         PositionsModule
       ],
       autoSchemaFile: 'schema.gql',
+      buildSchemaOptions: {
+        numberScalarMode: 'integer'
+      },
       playground: true
     }),
     SequelizeModule.forRoot({
