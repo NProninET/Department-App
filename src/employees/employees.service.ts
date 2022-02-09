@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Employee } from './models/employees.model';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeInput } from './inputs/update-employee.input';
 import { CreateEmployeeInput } from './inputs/create-employee.input';
 import { Position } from 'src/positions/models/positions.model';
 import { Department } from 'src/departments/models/departments.model';
+import { EmployeeBase } from './models/employees-base.model';
 
 @Injectable()
 export class EmployeesService {
@@ -14,20 +13,12 @@ export class EmployeesService {
     @InjectModel(Employee) private employeeRepository: typeof Employee,
   ) {}
   
-  async createEmployee(dto: CreateEmployeeDto) {
-    const employee = await this.employeeRepository.create(dto);
-
-    return employee;
-  }
-
-  async createEmployeeWithInput(input: CreateEmployeeInput) {
-    console.log(input);
+  async createEmployee(input: CreateEmployeeInput): Promise<EmployeeBase> {
     const employee = await this.employeeRepository.create(input);
-
     return employee;
   }
 
-  async getAllEmployees() {
+  async getAllEmployees(): Promise<Employee[]> {
     const employees = await this.employeeRepository.findAll({
       include: {
         model: Position,
@@ -39,7 +30,7 @@ export class EmployeesService {
     return employees;
   }
 
-  async getAllEmployeesInDepartment(department: number) {
+  async getAllEmployeesInDepartment(department: number): Promise<Employee[]> {
     return this.employeeRepository.findAll({
       include: [{
         model: Position,
@@ -51,26 +42,19 @@ export class EmployeesService {
     });
   }
 
-  async removeEmployee(id: number) {
-    return await this.employeeRepository.destroy({where: {id}})
-  }
-
-  async getEmployeeById(id: number) {
+  async getEmployeeById(id: number): Promise<Employee> {
     const employee = await this.employeeRepository.findByPk(id);
     return employee;
   }
 
-  async updateEmployee(id: number, dto: UpdateEmployeeDto) {
-    const employee = await this.employeeRepository.findByPk(id)
-    await employee.update(dto);
-    await employee.save();
-    return employee;
-  }
-
-  async updateEmployeeWithInput(id: number, input: UpdateEmployeeInput) {
-    const employee = await this.employeeRepository.findByPk(id);
+  async updateEmployee(input: UpdateEmployeeInput): Promise<EmployeeBase> {
+    const employee = await this.employeeRepository.findByPk(input.id)
     await employee.update(input);
     await employee.save();
     return employee;
+  }
+  
+  async removeEmployee(id: number): Promise<number> {
+    return await this.employeeRepository.destroy({where: {id}})
   }
 }

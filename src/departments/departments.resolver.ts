@@ -3,19 +3,22 @@ import { DepartmentsService } from "./departments.service";
 import { Department } from "./models/departments.model";
 import { CreateDepartmentInput } from "./inputs/create-department.input";
 import { UpdateDepartmentInput } from "./inputs/update-department.input";
+import { DepartmentExtended } from "./models/departments-extended.model";
+import { DepartmentBase } from "./models/departments-base.model";
 
 @Resolver(() => Department)
 export class DepartmentsResolver {
     constructor(private readonly departmentsService: DepartmentsService) {}
 
-    @Mutation(() => Department, {name: 'createDepartment'})
-    async createDepartmentWithInput(@Args('input') cdi: CreateDepartmentInput): Promise<Department> {
-        return await this.departmentsService.createDepartmentWithInput(cdi);
+    @Mutation(() => DepartmentBase, {name: 'createDepartment'})
+    async createDepartmentWithInput(@Args('input') input: CreateDepartmentInput): Promise<DepartmentBase> {
+        return await this.departmentsService.createDepartment(input);
     }
 
     @Query(() => [Department], {name: 'departments'})
     async findAll(): Promise<Department[]> {
-        return await this.departmentsService.getAllDepartments();
+        const departments =  await this.departmentsService.getAllDepartments();
+        return departments;
     }
 
     @Query(() => Department, {name: 'department'})
@@ -23,9 +26,9 @@ export class DepartmentsResolver {
         return await this.departmentsService.getDepartmentById(id);
     }
 
-    @Mutation(() => Department, {name: 'updateDepartment'})
-    async updateDepartment(@Args('input') updateDepartmentInput: UpdateDepartmentInput): Promise<Department> {
-        return await this.departmentsService.updateDepartmentWithInput(updateDepartmentInput.id, updateDepartmentInput)
+    @Mutation(() => DepartmentBase, {name: 'updateDepartment'})
+    async updateDepartment(@Args('input') input: UpdateDepartmentInput): Promise<DepartmentBase> {
+        return await this.departmentsService.updateDepartment(input.id, input)
     }
 
     @Mutation(() => Int)

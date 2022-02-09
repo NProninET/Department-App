@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { EmployeesService } from "./employees.service";
 import { Employee } from "./models/employees.model";
+import { EmployeeBase } from "./models/employees-base.model";
 import { CreateEmployeeInput } from "./inputs/create-employee.input";
 import { UpdateEmployeeInput } from "./inputs/update-employee.input";
 
@@ -8,9 +9,9 @@ import { UpdateEmployeeInput } from "./inputs/update-employee.input";
 export class EmployeesResolver {
     constructor(private readonly employeesService: EmployeesService) {}
 
-    @Mutation(() => Employee, {name: 'createEmployee'})
-    createEmployee(@Args('input') input: CreateEmployeeInput): Promise<Employee> {
-        return this.employeesService.createEmployeeWithInput(input);
+    @Mutation(() => EmployeeBase, {name: 'createEmployee'})
+    createEmployee(@Args('input') input: CreateEmployeeInput): Promise<EmployeeBase> {
+        return this.employeesService.createEmployee(input);
     }
 
     @Query(() => [Employee], {name: 'employees'})
@@ -28,12 +29,12 @@ export class EmployeesResolver {
         return this.employeesService.getEmployeeById(id);
     }
 
-    @Mutation(() => Employee, {name: 'updateEmployee'})
-    updateEmployee(@Args('input') input: UpdateEmployeeInput): Promise<Employee> {
-        return this.employeesService.updateEmployeeWithInput(input.id, input)
+    @Mutation(() => EmployeeBase, {name: 'updateEmployee'})
+    updateEmployee(@Args('input') input: UpdateEmployeeInput): Promise<EmployeeBase> {
+        return this.employeesService.updateEmployee(input)
     }
 
-    @Mutation(() => Employee, {name: 'removeEmployee'})
+    @Mutation(() => Int, {name: 'removeEmployee'})
     removeEmployee(@Args('id') id: number): Promise<number> {
         return this.employeesService.removeEmployee(id);
     }

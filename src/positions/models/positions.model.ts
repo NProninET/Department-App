@@ -46,6 +46,7 @@ export class Position extends Model<Position, PositionCreationAttrs> {
     @BelongsTo(() => Department)
     department: Department
 
+    @Field(() => [Employee])
     @HasMany(() => Employee)
     employees: Employee[]
 }

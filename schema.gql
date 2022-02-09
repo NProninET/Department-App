@@ -16,11 +16,33 @@ type Position {
   title: String
   description: String
   department: Department!
+  employees: [Employee!]!
 }
 
 type Department {
   id: Int!
   title: String!
+  description: String
+  positions: [Position!]!
+}
+
+type DepartmentBase {
+  id: Int!
+  title: String!
+  description: String
+}
+
+type EmployeeBase {
+  id: Int!
+  name: String
+  surname: String
+  email: String!
+  age: Int
+}
+
+type PositionBase {
+  id: Int!
+  title: String
   description: String
 }
 
@@ -35,14 +57,14 @@ type Query {
 }
 
 type Mutation {
-  createDepartment(input: CreateDepartmentInput!): Department!
-  updateDepartment(input: UpdateDepartmentInput!): Department!
+  createDepartment(input: CreateDepartmentInput!): DepartmentBase!
+  updateDepartment(input: UpdateDepartmentInput!): DepartmentBase!
   removeDepartment(id: Int!): Int!
-  createEmployee(input: CreateEmployeeInput!): Employee!
-  updateEmployee(input: UpdateEmployeeInput!): Employee!
-  removeEmployee(id: Int!): Employee!
-  createPosition(input: CreatePositionInput!): Position!
-  updatePosition(input: UpdatePositionInput!): Position!
+  createEmployee(input: CreateEmployeeInput!): EmployeeBase!
+  updateEmployee(input: UpdateEmployeeInput!): EmployeeBase!
+  removeEmployee(id: Int!): Int!
+  createPosition(input: CreatePositionInput!): PositionBase!
+  updatePosition(input: UpdatePositionInput!): PositionBase!
   removePosition(id: Int!): Int!
 }
 

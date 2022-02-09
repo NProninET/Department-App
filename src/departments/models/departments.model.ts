@@ -28,6 +28,7 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
   @Column({ type: DataType.STRING })
   description: string;
 
+  @Field(() => [Position])
   @HasMany(() => Position)
   positions: Position[]
 }

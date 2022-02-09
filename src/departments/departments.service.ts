@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Employee } from 'src/employees/models/employees.model';
 import { Department } from './models/departments.model';
-import { CreateDepartmentDto } from './dto/create-department.dto';
-import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { EmployeesService } from 'src/employees/employees.service';
+import { DepartmentBase } from './models/departments-base.model';
+import { DepartmentExtended } from './models/departments-extended.model';
 import { UpdateDepartmentInput } from './inputs/update-department.input';
 import { ApolloError } from 'apollo-server-express';
 import { Position } from 'src/positions/models/positions.model';
@@ -12,21 +11,21 @@ import { CreateDepartmentInput } from './inputs/create-department.input';
 
 @Injectable()
 export class DepartmentsService {
+
+    includes = {
+        include: [{
+            model: Position,
+            include: [{
+                model: Employee,
+            }]
+        }]
+    }
+
     constructor(
         @InjectModel(Department) private departmentRepository: typeof Department
     ) { }
 
-    async createDepartment(dto: CreateDepartmentDto): Promise<Department> {
-        try {
-            const department = await this.departmentRepository.create(dto);
-            return department;
-        } catch (e) {
-            console.log(e);
-            throw new ApolloError(`Department with title '${dto.title}' already exists!`, '');
-        }
-    }
-
-    async createDepartmentWithInput(input: CreateDepartmentInput): Promise<Department> {
+    async createDepartment(input: CreateDepartmentInput): Promise<DepartmentBase> {
         try {
             const department = await this.departmentRepository.create(input);
             return department;
@@ -37,42 +36,24 @@ export class DepartmentsService {
     }
 
     async getAllDepartments(): Promise<Department[]> {
-        const departments = await this.departmentRepository.findAll({
-            include: [{
-                model: Position,
-                attributes: [
-                    'title', 'id'
-                ],
-                include: [{
-                    model: Employee
-                }]
-            }]
-        });
-
+        const departments = await this.departmentRepository.findAll(this.includes);
         return departments;
     }
 
     async getDepartmentById(id: number): Promise<Department> {
-        const department = await this.departmentRepository.findByPk(id);
+        const department = await this.departmentRepository.findByPk(id, this.includes);
         return department;
+    }
+
+    async updateDepartment(id: number, input: UpdateDepartmentInput): Promise<DepartmentBase> {
+        const department = await this.departmentRepository.findByPk(id)
+        await department.update(input)
+        await department.save()
+        return department
     }
 
     async removeDepartment(id: number): Promise<number> {
         const linesRemoved = this.departmentRepository.destroy({ where: { id } });
         return linesRemoved;
-    }
-
-    async updateDepartment(id: number, dto: UpdateDepartmentDto): Promise<Department> {
-        const department = await this.departmentRepository.findByPk(id)
-        await department.update(dto)
-        await department.save()
-        return department
-    }
-
-    async updateDepartmentWithInput(id: number, input: UpdateDepartmentInput): Promise<Department> {
-        const department = await this.departmentRepository.findByPk(id)
-        await department.update(input)
-        await department.save()
-        return department
     }
 }
