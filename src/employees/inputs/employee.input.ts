@@ -19,7 +19,8 @@ export class BaseEmployeeInput {
 
     @Field(
         () => String, { 
-            description: 'Employee\'s email' 
+            description: 'Employee\'s email',
+            nullable: true
     })
     email: string;
 
@@ -29,4 +30,11 @@ export class BaseEmployeeInput {
             nullable: true
     })
     age: number;
+
+    @Field(
+        () => Int, {
+        description: 'Employee\'s position ID',
+        nullable: true
+    })
+    positionId: number;
 }

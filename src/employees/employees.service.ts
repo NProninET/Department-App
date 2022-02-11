@@ -47,8 +47,12 @@ export class EmployeesService {
     return employee;
   }
 
-  async updateEmployee(input: UpdateEmployeeInput): Promise<EmployeeBase> {
-    const employee = await this.employeeRepository.findByPk(input.id)
+  async updateEmployee(input: UpdateEmployeeInput): Promise<Employee> {
+    const employee = await this.employeeRepository.findByPk(input.id, {
+      include: {
+        model: Position
+      }
+    })
     await employee.update(input);
     await employee.save();
     return employee;

@@ -1,6 +1,7 @@
 import { HasMany, Column, DataType, Model, Table } from 'sequelize-typescript';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Position } from 'src/positions/models/positions.model';
+import { Employee } from 'src/employees/models/employees.model';
 
 interface DepartmentCreationAttrs {
   title: string;
@@ -35,8 +36,16 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
   @Field(
     type => Int, {
     description: 'Quantity of employees in department',
-    defaultValue: 0
+    nullable: true
   })
   @Column({type: DataType.VIRTUAL(DataType.INTEGER)})
   employeesQuantity: number;
+
+  @Field(
+    type => [Employee], {
+    description: 'Employees in department',
+    nullable: true
+  })
+  @Column({type: DataType.VIRTUAL(DataType.ARRAY)})
+  employees: Employee[];
 }

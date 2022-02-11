@@ -21,7 +21,7 @@ export class DepartmentsService {
             return department;
         } catch (e) {
             console.log(e);
-            throw new ApolloError(`Department with title '${input.title}' already exists!`, '');
+            throw new ApolloError(`Отдел с названием '${input.title}' уже есть!`, 'ERR_EXISTING_NAME');
         }
     }
 
@@ -34,13 +34,11 @@ export class DepartmentsService {
                 }]
             }], 
         });
-        
         departments.forEach((department) => {
             let qty = 0;
-            department.positions.forEach((position) => { qty += position.employees.length; })
+            department.positions.forEach((position) => { qty += position.employees.length; });
             department.setDataValue('employeesQuantity', qty);
         });
-
         return departments;
     }
 
@@ -53,6 +51,17 @@ export class DepartmentsService {
                 }]
             }], 
         });
+        let employees = [];
+        department.positions.forEach(position => {
+            position.employees.forEach(employee => {
+                employee.position = position;
+            });
+            employees = employees.concat(position.employees);
+        });
+        employees.sort((a, b) => a.name.localeCompare(b.name));
+        employees.sort((a, b) => a.surname.localeCompare(b.surname));
+        department.setDataValue('employees', employees);
+        department.setDataValue('employeesQuantity', employees.length);
         return department;
     }
 
@@ -64,7 +73,20 @@ export class DepartmentsService {
     }
 
     async removeDepartment(id: number): Promise<number> {
-        const linesRemoved = this.departmentRepository.destroy({ where: { id } });
-        return linesRemoved;
+        const department = await this.departmentRepository.findByPk(id, {
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee
+                }]
+            }]
+        });
+        let isEmpty = true;
+        department.positions.forEach(position => {if (position.employees.length) {isEmpty = false;}});
+        if(isEmpty) {
+            const linesRemoved = this.departmentRepository.destroy({ where: { id } });
+            return linesRemoved;
+        }
+        throw new ApolloError('Department is not empty!');
     }
 }

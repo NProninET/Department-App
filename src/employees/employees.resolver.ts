@@ -29,8 +29,8 @@ export class EmployeesResolver {
         return this.employeesService.getEmployeeById(id);
     }
 
-    @Mutation(() => EmployeeBase, {name: 'updateEmployee'})
-    updateEmployee(@Args('input') input: UpdateEmployeeInput): Promise<EmployeeBase> {
+    @Mutation(() => Employee, {name: 'updateEmployee'})
+    updateEmployee(@Args('input') input: UpdateEmployeeInput): Promise<Employee> {
         return this.employeesService.updateEmployee(input)
     }
 

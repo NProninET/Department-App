@@ -26,7 +26,10 @@ type Department {
   positions: [Position!]!
 
   """Quantity of employees in department"""
-  employeesQuantity: Int!
+  employeesQuantity: Int
+
+  """Employees in department"""
+  employees: [Employee!]
 }
 
 type DepartmentBase {
@@ -64,7 +67,7 @@ type Mutation {
   updateDepartment(input: UpdateDepartmentInput!): DepartmentBase!
   removeDepartment(id: Int!): Int!
   createEmployee(input: CreateEmployeeInput!): EmployeeBase!
-  updateEmployee(input: UpdateEmployeeInput!): EmployeeBase!
+  updateEmployee(input: UpdateEmployeeInput!): Employee!
   removeEmployee(id: Int!): Int!
   createPosition(input: CreatePositionInput!): PositionBase!
   updatePosition(input: UpdatePositionInput!): PositionBase!
@@ -119,6 +122,9 @@ input UpdateEmployeeInput {
 
   """Employee's age"""
   age: Int
+
+  """Employee's position ID"""
+  positionId: Int
 
   """Employee's ID"""
   id: Int!
