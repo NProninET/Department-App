@@ -8,6 +8,7 @@ type Employee {
   surname: String
   email: String!
   age: Int
+  photoURI: String
   position: Position!
 }
 
@@ -74,19 +75,19 @@ type Mutation {
   removePosition(id: Int!): Int!
 }
 
-input CreatePositionInput {
-  """Position title"""
+input CreateDepartmentInput {
+  """Department title"""
   title: String!
 
-  """Position description"""
-  description: String!
+  """Short description of department"""
+  description: String
 }
 
-input UpdatePositionInput {
-  """Position title"""
+input UpdateDepartmentInput {
+  """Department title"""
   title: String
 
-  """Position description"""
+  """Short description of department"""
   description: String
 
   """Department ID"""

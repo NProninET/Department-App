@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Post, Delete, Patch, Param, Res, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Patch,
+  Param,
+  Res,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -44,23 +56,9 @@ export class EmployeesController {
     });
   }
 
-  /* @Patch(':id')
-  updateEmployee(
-    @Res() res,
-    @Param('id') id: number,
-    @Body() updateEmployeeDto: UpdateEmployeeDto,
-  ) {
-    const employee = this.employeeService.updateEmployee(id, updateEmployeeDto);
-    return res.status(HttpStatus.OK).json({
-      message: `Employee #${id} updated`,
-      payload: employee,
-    });
-  } */
-
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@UploadedFile() file) {
-  return await this.employeeService.upload(file);
+    return await this.employeeService.upload(file);
+  }
 }
-}
- 
