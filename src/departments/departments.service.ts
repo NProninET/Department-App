@@ -1,81 +1,92 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Employee } from 'src/employees/employees.model';
-import { Position } from 'src/positions/positions.model';
-import { Department } from './departments.model';
-import { CreateDepartmentDto } from './dto/create-department.dto';
-import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { EmployeesService } from 'src/employees/employees.service';
+import { Employee } from 'src/employees/models/employees.model';
+import { Department } from './models/departments.model';
+import { DepartmentBase } from './models/departments-base.model';
 import { UpdateDepartmentInput } from './inputs/update-department.input';
+import { ApolloError } from 'apollo-server-express';
+import { Position } from 'src/positions/models/positions.model';
+import { CreateDepartmentInput } from './inputs/create-department.input';
 
 @Injectable()
 export class DepartmentsService {
-  constructor(
-    @InjectModel(Department) private departmentRepository: typeof Department,
-  ) {}
-  async createDepartment(dto: CreateDepartmentDto) {
-    const department = await this.departmentRepository.create(dto);
 
-    return department;
-  }
+    constructor(
+        @InjectModel(Department) private departmentRepository: typeof Department
+    ) { }
 
-  async getAllDepartments() {
-    const departments = await this.departmentRepository.findAll({
-      include: [
-        {
-          model: Position,
-          include: [
-            {
-              model: Employee,
-              attributes: ['name', 'surname', 'email', 'age'],
-            },
-          ],
-        },
-      ],
-    });
+    async createDepartment(input: CreateDepartmentInput): Promise<DepartmentBase> {
+        try {
+            const department = await this.departmentRepository.create(input);
+            return department;
+        } catch (e) {
+            console.log(e);
+            throw new ApolloError(`Отдел с названием '${input.title}' уже есть!`, 'ERR_EXISTING_NAME');
+        }
+    }
 
-    return departments;
-  }
+    async getAllDepartments(): Promise<Department[]> {
+        const departments = await this.departmentRepository.findAll({
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee
+                }]
+            }], 
+        });
+        departments.forEach((department) => {
+            let qty = 0;
+            department.positions.forEach((position) => { qty += position.employees.length; });
+            department.setDataValue('employeesQuantity', qty);
+        });
+        return departments;
+    }
 
-  async getDepartmentById(id: number) {
-    const department = await this.departmentRepository.findByPk(id, {
-      include: [
-        {
-          model: Position,
-          include: [
-            {
-              model: Employee,
-              attributes: ['name', 'surname', 'email', 'age', 'positionId'],
-            },
-          ],
-        },
-      ],
-    });
-    return department.positions
-    .map((position) => {
-      return position.employees;
-    });
-  }
+    async getDepartmentById(id: number): Promise<Department> {
+        const department = await this.departmentRepository.findByPk(id, {
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee,
+                }]
+            }], 
+        });
+        let employees = [];
+        department.positions.forEach(position => {
+            position.employees.forEach(employee => {
+                employee.position = position;
+            });
+            employees = employees.concat(position.employees);
+        });
+        employees.sort((a, b) => a.name.localeCompare(b.name));
+        employees.sort((a, b) => a.surname.localeCompare(b.surname));
+        department.setDataValue('employees', employees);
+        department.setDataValue('employeesQuantity', employees.length);
+        return department;
+    }
 
-  async removeDepartment(id: number) {
-    return await this.departmentRepository.destroy({ where: { id } });
-  }
+    async updateDepartment(id: number, input: UpdateDepartmentInput): Promise<DepartmentBase> {
+        const department = await this.departmentRepository.findByPk(id)
+        await department.update(input)
+        await department.save()
+        return department
+    }
 
-  async updateDepartment(id: number, dto: UpdateDepartmentDto) {
-    const department = await this.departmentRepository.findByPk(id);
-    await department.update(dto);
-
-    await department.save();
-
-    return department;
-  }
-
-  async updateDepartmentWithInput(id: number, input: UpdateDepartmentInput) {
-    const department = await this.departmentRepository.findByPk(id);
-    await department.update(input);
-
-    await department.save();
-
-    return department;
-  }
+    async removeDepartment(id: number): Promise<number> {
+        const department = await this.departmentRepository.findByPk(id, {
+            include: [{
+                model: Position,
+                include: [{
+                    model: Employee
+                }]
+            }]
+        });
+        let isEmpty = true;
+        department.positions.forEach(position => {if (position.employees.length) {isEmpty = false;}});
+        if(isEmpty) {
+            const linesRemoved = this.departmentRepository.destroy({ where: { id } });
+            return linesRemoved;
+        }
+        throw new ApolloError('Department is not empty!');
+    }
 }

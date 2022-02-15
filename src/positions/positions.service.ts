@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Position } from './positions.model';
-import { Employee } from 'src/employees/employees.model';
-import { CreatePositionDto } from './dto/create-position.dto';
-import { UpdatePositionDto } from './dto/update-position.dto';
+import { Position } from './models/positions.model';
 import { UpdatePositionInput } from './inputs/update-position.input';
+import { CreatePositionInput } from './inputs/create-position.input';
+import { Department } from 'src/departments/models/departments.model';
+import { Employee } from 'src/employees/models/employees.model';
+import { PositionBase } from './models/positions-base.model';
 
 @Injectable()
 export class PositionsService {
@@ -12,46 +13,38 @@ export class PositionsService {
     @InjectModel(Position) private positionRepository: typeof Position,
   ) {}
 
- async createPosition(dto: CreatePositionDto) {
-    const position = await this.positionRepository.create(dto);
-
+  async createPosition(input: CreatePositionInput): Promise<PositionBase> {
+    const position = await this.positionRepository.create(input);
     return position;
   }
 
-  async getAllPositions() {
-    const positions = await this.positionRepository.findAll();
-
+  async getAllPositions(): Promise<Position[]> {
+    const positions = await this.positionRepository.findAll({
+      include: [
+        { model: Department },
+        { model: Employee }
+      ]
+    });
     return positions;
   }
 
-  async getAllPositionsInDepartment(department: number) {
-    return this.positionRepository.findAll({ where: {departmentId: department}, attributes: ['id', 'title', 'description']});
-  }
-
-  async removePosition(id: number) {
-    return await this.positionRepository.destroy({where: {id}})
-  }
-
-  async getPositionById(id: number) {
-    const position = await this.positionRepository.findByPk(id);
+  async getPositionById(id: number): Promise<Position> {
+    const position = await this.positionRepository.findByPk(id, {
+      include: [{
+        model: Department
+      }]
+    });
     return position;
   }
 
-  async updatePosition(id: number, dto: UpdatePositionDto) {
-    const department = await this.positionRepository.findByPk(id)
-    await department.update(dto)
-
-    await department.save()
-
-    return department
+  async updatePosition(input: UpdatePositionInput): Promise<PositionBase> {
+    const position = await this.positionRepository.findByPk(input.id);
+    await position.update(input);
+    await position.save();
+    return position;
   }
 
-  async updatePositionWithInput(id: number, dto: UpdatePositionInput) {
-    const department = await this.positionRepository.findByPk(id)
-    await department.update(dto)
-
-    await department.save()
-
-    return department
+  async removePosition(id: number): Promise<number> {
+    return await this.positionRepository.destroy({where: {id}})
   }
 }

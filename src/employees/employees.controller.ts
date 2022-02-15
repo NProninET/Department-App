@@ -10,7 +10,7 @@ export class EmployeesController {
 
   @Post()
   create(@Res() res, @Body() employeeDto: CreateEmployeeDto) {
-    const newEmployee = this.employeeService.createEmployee(employeeDto);
+    const newEmployee = this.employeeService.createEmployeeDTO(employeeDto);
     return res.status(HttpStatus.OK).json({
       message: 'Employee created',
       payload: newEmployee,
@@ -44,7 +44,7 @@ export class EmployeesController {
     });
   }
 
-  @Patch(':id')
+  /* @Patch(':id')
   updateEmployee(
     @Res() res,
     @Param('id') id: number,
@@ -55,7 +55,7 @@ export class EmployeesController {
       message: `Employee #${id} updated`,
       payload: employee,
     });
-  }
+  } */
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -63,3 +63,4 @@ export class EmployeesController {
   return await this.employeeService.upload(file);
 }
 }
+ 

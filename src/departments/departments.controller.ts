@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, Res, HttpStatus } from '@nestjs/common';
+/* import { Body, Controller, Get, Post, Param, Delete, Patch, Res, HttpStatus } from '@nestjs/common';
 import { EmployeesService } from 'src/employees/employees.service';
 import { DepartmentsService } from './departments.service';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
@@ -69,7 +69,7 @@ export class DepartmentsController {
     });
   }
 
-  @Delete('/:id')
+   @Delete('/:id')
   async deleteDepartment(
     @Res() res, 
     @Param('id') id: number
@@ -87,7 +87,7 @@ export class DepartmentsController {
         payload: department,
       });
     }
-  }
+  } 
 
   @Patch(':id')
   async updateDepartment(
@@ -105,3 +105,4 @@ export class DepartmentsController {
     });
   }
 }
+ */

@@ -2,14 +2,51 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Employee {
+  id: Int!
+  name: String
+  surname: String
+  email: String!
+  age: Int
+  position: Position!
+}
+
 type Position {
   id: Int!
   title: String
   description: String
   department: Department!
+  employees: [Employee!]!
 }
 
 type Department {
+  id: Int!
+  title: String!
+  description: String
+  positions: [Position!]!
+
+  """Quantity of employees in department"""
+  employeesQuantity: Int
+
+  """Employees in department"""
+  employees: [Employee!]
+}
+
+type DepartmentBase {
+  id: Int!
+  title: String!
+  description: String
+}
+
+type EmployeeBase {
+  id: Int!
+  name: String
+  surname: String
+  email: String!
+  age: Int
+}
+
+type PositionBase {
   id: Int!
   title: String
   description: String
@@ -17,15 +54,24 @@ type Department {
 
 type Query {
   departments: [Department!]!
-  department(id: Float!): Department!
+  department(id: Int!): Department!
+  employees: [Employee!]!
+  employeesFromDepartment(id: Int!): [Employee!]!
+  employee(id: Int!): Employee!
   positions: [Position!]!
-  position(id: Float!): Position!
+  position(id: Int!): Position!
 }
 
 type Mutation {
-  createDepartment(createPositionInput: CreatePositionInput!): Position!
-  updateDepartment(updatePositionInput: UpdatePositionInput!): Position!
-  removeDepartment(id: Float!): Position!
+  createDepartment(input: CreateDepartmentInput!): DepartmentBase!
+  updateDepartment(input: UpdateDepartmentInput!): DepartmentBase!
+  removeDepartment(id: Int!): Int!
+  createEmployee(input: CreateEmployeeInput!): EmployeeBase!
+  updateEmployee(input: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: Int!): Int!
+  createPosition(input: CreatePositionInput!): PositionBase!
+  updatePosition(input: UpdatePositionInput!): PositionBase!
+  removePosition(id: Int!): Int!
 }
 
 input CreatePositionInput {
@@ -42,5 +88,66 @@ input UpdatePositionInput {
 
   """Position description"""
   description: String
+
+  """Department ID"""
+  id: Int!
+}
+
+input CreateEmployeeInput {
+  """Employee's first name"""
+  name: String
+
+  """Employee's last name"""
+  surname: String
+
+  """Employee's email"""
+  email: String!
+
+  """Employee's age"""
+  age: Int
+
+  """Employee's position ID"""
+  positionId: Int!
+}
+
+input UpdateEmployeeInput {
+  """Employee's first name"""
+  name: String
+
+  """Employee's last name"""
+  surname: String
+
+  """Employee's email"""
+  email: String
+
+  """Employee's age"""
+  age: Int
+
+  """Employee's position ID"""
+  positionId: Int
+
+  """Employee's ID"""
+  id: Int!
+}
+
+input CreatePositionInput {
+  """Position title"""
+  title: String
+
+  """Position description"""
+  description: String
+
+  """Department ID"""
+  departmentId: Int!
+}
+
+input UpdatePositionInput {
+  """Position title"""
+  title: String
+
+  """Position description"""
+  description: String
+
+  """Position ID"""
   id: Int!
 }
