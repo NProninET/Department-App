@@ -84,7 +84,7 @@ export class DepartmentsService {
         let isEmpty = true;
         department.positions.forEach(position => {if (position.employees.length) {isEmpty = false;}});
         if(isEmpty) {
-            const linesRemoved = this.departmentRepository.destroy({ where: { id } });
+            const linesRemoved = await this.departmentRepository.destroy({ where: { id } });
             return linesRemoved;
         }
         throw new ApolloError('Department is not empty!');
