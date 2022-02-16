@@ -1,4 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class BaseEmployeeInput {
@@ -26,11 +27,8 @@ export class BaseEmployeeInput {
   })
   age: number;
 
-  @Field(() => Int, {
-    description: "Employee's position ID",
-    nullable: true,
-  })
-  positionId: number;
+  @Field(() => GraphQLUpload)
+  photo: FileUpload;
 
   @Field(() => String)
   photoURI: string;

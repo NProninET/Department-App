@@ -53,6 +53,7 @@ type EmployeeBase {
   surname: String
   email: String!
   age: Int
+  photoURI: String
 }
 
 type PositionBase {
@@ -78,7 +79,14 @@ type Mutation {
   createEmployee(input: CreateEmployeeInput!): EmployeeBase!
   updateEmployee(input: UpdateEmployeeInput!): Employee!
   removeEmployee(id: Int!): Int!
+<<<<<<< Updated upstream
   uploadEmployeePhoto: Employee!
+=======
+<<<<<<< Updated upstream
+=======
+  uploadEmployeePhoto(file: Upload!, employeeId: Int!): Employee!
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   createPosition(input: CreatePositionInput!): PositionBase!
   updatePosition(input: UpdatePositionInput!): PositionBase!
   removePosition(id: Int!): Int!
@@ -118,8 +126,19 @@ input CreateEmployeeInput {
 
   """Employee's position ID"""
   positionId: Int!
+<<<<<<< Updated upstream
   photoURI: String
+=======
+<<<<<<< Updated upstream
+=======
+  photo: Upload
+  photoURI: String
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input UpdateEmployeeInput {
   """Employee's first name"""
@@ -136,7 +155,15 @@ input UpdateEmployeeInput {
 
   """Employee's position ID"""
   positionId: Int
+<<<<<<< Updated upstream
   photoURI: String
+=======
+<<<<<<< Updated upstream
+=======
+  photo: Upload
+  photoURI: String
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   """Employee's ID"""
   id: Int!
