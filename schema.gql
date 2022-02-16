@@ -78,6 +78,7 @@ type Mutation {
   createEmployee(input: CreateEmployeeInput!): EmployeeBase!
   updateEmployee(input: UpdateEmployeeInput!): Employee!
   removeEmployee(id: Int!): Int!
+  uploadEmployeePhoto: Employee!
   createPosition(input: CreatePositionInput!): PositionBase!
   updatePosition(input: UpdatePositionInput!): PositionBase!
   removePosition(id: Int!): Int!
@@ -117,6 +118,7 @@ input CreateEmployeeInput {
 
   """Employee's position ID"""
   positionId: Int!
+  photoURI: String
 }
 
 input UpdateEmployeeInput {
@@ -134,6 +136,7 @@ input UpdateEmployeeInput {
 
   """Employee's position ID"""
   positionId: Int
+  photoURI: String
 
   """Employee's ID"""
   id: Int!

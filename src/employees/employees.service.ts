@@ -91,12 +91,11 @@ export class EmployeesService {
     const { originalname, buffer } = file;
     const bucketS3 = process.env.AWS_BUCKET_NAME;
     const result = await this.uploadS3(buffer, bucketS3, originalname);
-    return this.updateEmployee(
-      new UpdateEmployeeInput({
-        id: employeeID,
-        photoURI: result.Location,
-      }),
-    );
+    const employeeInput = new UpdateEmployeeInput();
+    employeeInput.id = employeeID;
+    employeeInput.photoURI = result.Location;
+    console.log(employeeInput);
+    return this.updateEmployee(employeeInput);
   }
 
   async uploadS3(file: Buffer, bucket: string, name: string) {

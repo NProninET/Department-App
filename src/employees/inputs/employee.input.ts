@@ -31,4 +31,7 @@ export class BaseEmployeeInput {
     nullable: true,
   })
   positionId: number;
+
+  @Field(() => String)
+  photoURI: string;
 }

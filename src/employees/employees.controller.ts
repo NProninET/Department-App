@@ -9,6 +9,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -54,7 +55,7 @@ export class EmployeesController {
     });
   }
 
-  @Post(':id/upload')
+  @Patch(':id/upload')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@Param('id') id: number, @UploadedFile() file) {
     return await this.employeeService.upload(id, file);
