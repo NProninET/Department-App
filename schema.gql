@@ -39,6 +39,14 @@ type DepartmentBase {
   description: String
 }
 
+type DepartmentRemove {
+  """Quantity of positions removed"""
+  removedPositions: Int!
+
+  """Quantity of departments removed"""
+  removedDepartments: Int!
+}
+
 type EmployeeBase {
   id: Int!
   name: String
@@ -66,7 +74,7 @@ type Query {
 type Mutation {
   createDepartment(input: CreateDepartmentInput!): DepartmentBase!
   updateDepartment(input: UpdateDepartmentInput!): DepartmentBase!
-  removeDepartment(id: Int!): Int!
+  removeDepartment(id: Int!): DepartmentRemove!
   createEmployee(input: CreateEmployeeInput!): EmployeeBase!
   updateEmployee(input: UpdateEmployeeInput!): Employee!
   removeEmployee(id: Int!): Int!

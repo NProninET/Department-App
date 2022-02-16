@@ -7,12 +7,14 @@ import { UpdateDepartmentInput } from './inputs/update-department.input';
 import { ApolloError } from 'apollo-server-express';
 import { Position } from 'src/positions/models/positions.model';
 import { CreateDepartmentInput } from './inputs/create-department.input';
+import { DepartmentRemove } from './models/departments-remove.model';
 
 @Injectable()
 export class DepartmentsService {
 
     constructor(
-        @InjectModel(Department) private departmentRepository: typeof Department
+        @InjectModel(Department) private departmentRepository: typeof Department,
+        @InjectModel(Position) private positionsRepositiory: typeof Position
     ) { }
 
     async createDepartment(input: CreateDepartmentInput): Promise<DepartmentBase> {
@@ -72,7 +74,7 @@ export class DepartmentsService {
         return department
     }
 
-    async removeDepartment(id: number): Promise<number> {
+    async removeDepartment(id: number): Promise<DepartmentRemove> {
         const department = await this.departmentRepository.findByPk(id, {
             include: [{
                 model: Position,
@@ -84,8 +86,12 @@ export class DepartmentsService {
         let isEmpty = true;
         department.positions.forEach(position => {if (position.employees.length) {isEmpty = false;}});
         if(isEmpty) {
-            const linesRemoved = await this.departmentRepository.destroy({ where: { id } });
-            return linesRemoved;
+            const removedPositions = await this.positionsRepositiory.destroy( {where: { departmentId: id } });
+            const removedDepartments = await this.departmentRepository.destroy({ where: { id } });
+            return {
+                removedPositions,
+                removedDepartments
+            };
         }
         throw new ApolloError('Department is not empty!');
     }

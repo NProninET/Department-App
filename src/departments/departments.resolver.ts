@@ -4,6 +4,7 @@ import { Department } from "./models/departments.model";
 import { CreateDepartmentInput } from "./inputs/create-department.input";
 import { UpdateDepartmentInput } from "./inputs/update-department.input";
 import { DepartmentBase } from "./models/departments-base.model";
+import { DepartmentRemove } from "./models/departments-remove.model";
 
 @Resolver(() => Department)
 export class DepartmentsResolver {
@@ -30,8 +31,8 @@ export class DepartmentsResolver {
         return await this.departmentsService.updateDepartment(input.id, input)
     }
 
-    @Mutation(() => Int)
-    async removeDepartment(@Args('id') id: number): Promise<number> {
+    @Mutation(() => DepartmentRemove)
+    async removeDepartment(@Args('id') id: number): Promise<DepartmentRemove> {
         return await this.departmentsService.removeDepartment(id);
     }
 }
