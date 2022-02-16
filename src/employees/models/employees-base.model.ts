@@ -2,8 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class EmployeeBase {
-  
-  @Field(type => Int)
+  @Field(() => Int)
   id: number;
 
   @Field({ nullable: true })
@@ -17,5 +16,4 @@ export class EmployeeBase {
 
   @Field({ nullable: true })
   age: number;
-
 }

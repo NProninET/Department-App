@@ -11,8 +11,7 @@ interface DepartmentCreationAttrs {
 @ObjectType()
 @Table({ tableName: 'departments' })
 export class Department extends Model<Department, DepartmentCreationAttrs> {
-
-  @Field(type => Int)
+  @Field(() => Int)
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -31,21 +30,19 @@ export class Department extends Model<Department, DepartmentCreationAttrs> {
 
   @Field(() => [Position])
   @HasMany(() => Position)
-  positions: Position[]
+  positions: Position[];
 
-  @Field(
-    type => Int, {
+  @Field(() => Int, {
     description: 'Quantity of employees in department',
-    nullable: true
+    nullable: true,
   })
-  @Column({type: DataType.VIRTUAL(DataType.INTEGER)})
+  @Column({ type: DataType.VIRTUAL(DataType.INTEGER) })
   employeesQuantity: number;
 
-  @Field(
-    type => [Employee], {
+  @Field(() => [Employee], {
     description: 'Employees in department',
-    nullable: true
+    nullable: true,
   })
-  @Column({type: DataType.VIRTUAL(DataType.ARRAY)})
+  @Column({ type: DataType.VIRTUAL(DataType.ARRAY) })
   employees: Employee[];
 }

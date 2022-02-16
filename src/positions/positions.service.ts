@@ -20,19 +20,18 @@ export class PositionsService {
 
   async getAllPositions(): Promise<Position[]> {
     const positions = await this.positionRepository.findAll({
-      include: [
-        { model: Department },
-        { model: Employee }
-      ]
+      include: [{ model: Department }, { model: Employee }],
     });
     return positions;
   }
 
   async getPositionById(id: number): Promise<Position> {
     const position = await this.positionRepository.findByPk(id, {
-      include: [{
-        model: Department
-      }]
+      include: [
+        {
+          model: Department,
+        },
+      ],
     });
     return position;
   }
@@ -45,6 +44,6 @@ export class PositionsService {
   }
 
   async removePosition(id: number): Promise<number> {
-    return await this.positionRepository.destroy({where: {id}})
+    return await this.positionRepository.destroy({ where: { id } });
   }
 }

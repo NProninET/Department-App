@@ -14,19 +14,15 @@ import { PositionsModule } from './positions/positions.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env'
+      envFilePath: '.env',
     }),
     GraphQLModule.forRoot({
-      include: [
-        EmployeesModule,
-        DepartmentsModule,
-        PositionsModule
-      ],
+      include: [EmployeesModule, DepartmentsModule, PositionsModule],
       autoSchemaFile: 'schema.gql',
       buildSchemaOptions: {
-        numberScalarMode: 'integer'
+        numberScalarMode: 'integer',
       },
-      playground: true
+      playground: true,
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
@@ -35,17 +31,13 @@ import { PositionsModule } from './positions/positions.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [
-        Department, 
-        Employee, 
-        Position
-      ],
+      models: [Department, Employee, Position],
       synchronize: true,
-      autoLoadModels: true
+      autoLoadModels: true,
     }),
     DepartmentsModule,
     EmployeesModule,
-    PositionsModule
+    PositionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,5 @@
 export class UpdateDepartmentDto {
-    readonly id: number;
-    readonly title: string;
-    readonly description: string;
-  }
+  readonly id: number;
+  readonly title: string;
+  readonly description: string;
+}

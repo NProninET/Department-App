@@ -1,4 +1,4 @@
 export class RemoveDepartmentDTO {
-    readonly positionsRemoved: number;
-    readonly departmentsRemoved: number;
+  readonly positionsRemoved: number;
+  readonly departmentsRemoved: number;
 }

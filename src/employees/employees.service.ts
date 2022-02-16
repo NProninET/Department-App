@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Express } from 'express';
+import { S3 } from 'aws-sdk';
 import { Employee } from './models/employees.model';
+import { EmployeeBase } from './models/employees-base.model';
 import { UpdateEmployeeInput } from './inputs/update-employee.input';
 import { CreateEmployeeInput } from './inputs/create-employee.input';
 import { Position } from 'src/positions/models/positions.model';
 import { Department } from 'src/departments/models/departments.model';
-import { EmployeeBase } from './models/employees-base.model';
-import { S3 } from 'aws-sdk';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 
 @Injectable()
@@ -14,9 +15,10 @@ export class EmployeesService {
   constructor(
     @InjectModel(Employee) private employeeRepository: typeof Employee,
   ) {}
-  
+
   async createEmployee(input: CreateEmployeeInput): Promise<EmployeeBase> {
     const employee = await this.employeeRepository.create(input);
+    Logger.log(`Employee ID#${employee.id} created`);
     return employee;
   }
 
@@ -29,23 +31,29 @@ export class EmployeesService {
     const employees = await this.employeeRepository.findAll({
       include: {
         model: Position,
-        include: [{
-          model: Department
-        }]
-      }
+        include: [
+          {
+            model: Department,
+          },
+        ],
+      },
     });
     return employees;
   }
 
   async getAllEmployeesInDepartment(department: number): Promise<Employee[]> {
     return this.employeeRepository.findAll({
-      include: [{
-        model: Position,
-        where: { departmentId: department },
-        include: [{
-          model: Department
-        }]
-      }]
+      include: [
+        {
+          model: Position,
+          where: { departmentId: department },
+          include: [
+            {
+              model: Department,
+            },
+          ],
+        },
+      ],
     });
   }
 
@@ -57,33 +65,51 @@ export class EmployeesService {
   async updateEmployee(input: UpdateEmployeeInput): Promise<Employee> {
     const employee = await this.employeeRepository.findByPk(input.id, {
       include: {
-        model: Position
-      }
-    })
+        model: Position,
+      },
+    });
     await employee.update(input);
     await employee.save();
+    Logger.log(`Employee ID#${input.id} updated`);
     return employee;
   }
 
   async removeEmployee(id: number): Promise<number> {
-    return await this.employeeRepository.destroy({where: {id}})
+    const employeesDeleted = await this.employeeRepository.destroy({
+      where: { id },
+    });
+    Logger.log(`Employee ID#${id} deleted`);
+    return employeesDeleted;
   }
 
-  async upload(file) {
-    const { originalname } = file;
+  async uploadEmployeePhoto(file: Express.Multer.File): Promise<Employee> {
+    //const
+    return null;
+  }
+
+  async upload(employeeID: number, file: Express.Multer.File) {
+    const { originalname, buffer } = file;
     const bucketS3 = process.env.AWS_BUCKET_NAME;
-    return await this.uploadS3(file.buffer, bucketS3, originalname);
+    const result = await this.uploadS3(buffer, bucketS3, originalname);
+    return this.updateEmployee(
+      new UpdateEmployeeInput({
+        id: employeeID,
+        photoURI: result.Location,
+      }),
+    );
   }
 
-  async uploadS3(file, bucket, name) {
-    const s3 = this.getS3();
+  async uploadS3(file: Buffer, bucket: string, name: string) {
+    const s3 = new S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    });
     const params = {
       Bucket: bucket,
       Key: String(name),
       Body: file,
     };
-    return new Promise((resolve, reject) => {
-      console.log(resolve)
+    return new Promise<S3.ManagedUpload.SendData>((resolve, reject) => {
       s3.upload(params, (err, data) => {
         if (err) {
           Logger.error(err);
@@ -91,13 +117,6 @@ export class EmployeesService {
         }
         resolve(data);
       });
-    });
-  }
-
-  getS3() {
-    return new S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
   }
 }

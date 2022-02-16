@@ -2,14 +2,12 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
 export class DepartmentBase {
-  
-  @Field(type => Int)
+  @Field(() => Int)
   id: number;
 
-  @Field({nullable: false})
+  @Field({ nullable: false })
   title: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   description: string;
-
 }

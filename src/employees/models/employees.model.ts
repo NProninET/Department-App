@@ -19,7 +19,7 @@ interface EmployeeCreationAttrs {
 @ObjectType()
 @Table({ tableName: 'employees' })
 export class Employee extends Model<Employee, EmployeeCreationAttrs> {
-  @Field((type) => Int)
+  @Field(() => Int)
   @Column({
     type: DataType.INTEGER,
     unique: true,
