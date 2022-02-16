@@ -16,13 +16,7 @@ export class EmployeeBase {
 
   @Field({ nullable: true })
   age: number;
-<<<<<<< Updated upstream
-=======
 
-<<<<<<< Updated upstream
-=======
   @Field({ nullable: true })
   photoURI: string;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }
